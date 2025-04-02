@@ -80,10 +80,6 @@
     // Voorkom de standaard submit van de browser
     // Let op: hiermee overschrijven we de default Loading state van de browser...
     event.preventDefault()
-
-    //Loading state tonen
-    formbutton.textContent = "loading..."
-    // formbutton.disabled = true
   
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
@@ -103,14 +99,9 @@
     const responseDOM = parser.parseFromString(responseText, 'text/html')
 
     // Zoek in de responseDOM onze nieuwe state op, die we via Liquid hebben gerenderd
-    // console.log("responseDOM",responseDOM)
     const newState = responseDOM.querySelector("#berichten")
     
     // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
-    formbutton.textContent = "Verstuur"
-    // formbutton.disabled = false
-    // textarea.value=""
-
     // Overschrijf de bestaande HTML met de nieuwe state!
     messages.outerHTML = newState.outerHTML
 
