@@ -1,0 +1,119 @@
+<h2>Persons in Team: {{team}}</h2>
+
+<ul>
+{% for person in persons %}
+    <li>{{ person.name }}</li>
+  {% endfor %}
+  </ul>
+
+<!--
+    <form method="POST" action="/detail/{{ id }}/unlike">
+    
+    <br><br>
+    <label for="name">Bericht:</label>
+    <br>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      size="10" />
+
+      <br><br>
+      <label for="story">Tell us your story:</label>
+      <br>
+      <textarea id="story" name="story" rows="5" cols="33">
+      It was a dark and stormy night...
+      </textarea>
+
+      <br><br>
+      <button type="submit">Verstuur bericht</button>
+    </form>
+-->
+
+    <h2>Huidige berichten</h2>
+
+    <div id="berichten">
+      {% for message in messages %}
+      <p>{{ message.from }}: {{ message.text }} @{{ message.created | date: '%d-%m-%Y %H:%M' }}</p>
+      {% else %}
+      <p>Er zijn nog geen berichten voor dit team.</p>
+      {% endfor %}
+    </div>
+
+
+    <h2>Voeg een bericht toe</h2>
+    <form method="post" action="/">
+    <br><br>
+      <label>
+        Naam:
+        <input type="text" name="from" required>
+      </label>
+      <br><br>
+      <label>
+        Bericht:
+        <textarea name="text" required placeholder="typ typ typ"></textarea>
+      </label>
+      <br><br>
+      <button type="submit" id="stuur">Verstuur</button>
+    </form>
+  
+
+<details>
+    <summary>Data</summary>
+    Messages
+    <pre>{{ messages | json:4 }}</pre>
+    Persons
+    <pre>{{ persons | json:4 }}</pre>
+</details>
+
+
+
+<script>
+
+  const myform = document.querySelector("form")
+  const formbutton = document.querySelector("form button#stuur")
+  const textarea = document.querySelector("form textarea")
+  const messages = document.querySelector("#berichten")
+
+  // Als er ergens op de pagina een formulier wordt gesubmit..
+  myform.addEventListener("submit", async function(event) {
+    // Voorkom de standaard submit van de browser
+    // Let op: hiermee overschrijven we de default Loading state van de browser...
+    event.preventDefault()
+
+    //Loading state tonen
+    formbutton.textContent = "loading..."
+    // formbutton.disabled = true
+  
+    // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
+    // Gebruik daarvoor het action en method attribuut van het originele formulier
+    // Inclusief alle formulierelementen
+    const response = await fetch(myform.action, {
+      method: myform.method,
+      body: new URLSearchParams(new FormData(myform))
+    })
+
+    // De server redirect op de normale manier, en geeft HTML terug
+    // (De server weet niet eens dat deze fetch via client-side JavaScript gebeurde)
+    const responseText = await response.text()
+
+    // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
+    // Parse de nieuwe HTML en maak hiervan een nieuw Document Object Model in het geheugen
+    const parser = new DOMParser()
+    const responseDOM = parser.parseFromString(responseText, 'text/html')
+
+    // Zoek in de responseDOM onze nieuwe state op, die we via Liquid hebben gerenderd
+    // console.log("responseDOM",responseDOM)
+    const newState = responseDOM.querySelector("#berichten")
+    
+    // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
+    formbutton.textContent = "Verstuur"
+    // formbutton.disabled = false
+    // textarea.value=""
+
+    // Overschrijf de bestaande HTML met de nieuwe state!
+    messages.outerHTML = newState.outerHTML
+
+  })
+
+</script>

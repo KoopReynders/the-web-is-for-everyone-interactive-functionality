@@ -24,7 +24,32 @@ app.engine('liquid', engine.express());
 app.set('views', './views')
 
 
-console.log('Let op: Er zijn nog geen routes. Voeg hier dus eerst jouw GET en POST routes toe.')
+// console.log('Let op: Er zijn nog geen routes. Voeg hier dus eerst jouw GET en POST routes toe.')
+
+app.get('/', async function (request, response) {
+  console.log("APP.GET")
+  // Doe een fetch naar de data die je nodig hebt
+  // const apiResponse = await fetch('https://fdnd.directus.app/items/person/65')
+  const apiResponse = await fetch('https://fdnd.directus.app/items/person/?filter={"team":"Rocket"}')
+  const messagesResponse = await fetch(`https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}`)
+  
+  const apiResponseJSON = await apiResponse.json()
+  const messagesResponseJSON = await messagesResponse.json()
+
+  // Controleer eventueel de data in je console
+  // (Let op: dit is _niet_ de console van je browser, maar van NodeJS, in je terminal)
+  // console.log(apiResponseJSON)
+
+
+  // Render index.liquid uit de Views map
+  // Geef hier eventueel data aan mee
+  response.render('index.liquid', {
+    team:"Rocket", 
+    persons:apiResponseJSON.data,
+    messages: messagesResponseJSON.data
+  })
+})
+
 
 /*
 // Zie https://expressjs.com/en/5x/api.html#app.get.method over app.get()
@@ -60,7 +85,25 @@ app.post(…, async function (request, response) {
   // Zie https://expressjs.com/en/5x/api.html#res.redirect over response.redirect()
   response.redirect(303, …)
 })
-*/
+  */
+
+app.post('/', async function (request, response) {
+  console.log("APP.POST")
+  await fetch('https://fdnd.directus.app/items/messages/', {
+    method: 'POST',
+    body: JSON.stringify({
+      for: `Team Rocket`,
+      from: request.body.from,
+      text: request.body.text
+    }),
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  });
+
+  response.redirect(303, '/')
+})
+
 
 
 // Stel het poortnummer in waar Express op moet gaan luisteren
