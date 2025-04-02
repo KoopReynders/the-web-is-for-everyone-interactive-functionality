@@ -83,7 +83,7 @@
 
     //Loading state tonen
     formbutton.textContent = "loading..."
-    // formbutton.disabled = true
+    formbutton.disabled = true
   
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
@@ -101,19 +101,27 @@
     // Parse de nieuwe HTML en maak hiervan een nieuw Document Object Model in het geheugen
     const parser = new DOMParser()
     const responseDOM = parser.parseFromString(responseText, 'text/html')
+    // console.log("responseDOM",responseDOM)
 
     // Zoek in de responseDOM onze nieuwe state op, die we via Liquid hebben gerenderd
-    // console.log("responseDOM",responseDOM)
-    const newState = responseDOM.querySelector("#berichten")
-    
+    // const newState = responseDOM.querySelector("#berichten")
+    // console.log("newstate",newState)
+    const newMessage = responseDOM.querySelector("#berichten > p:first-child")
+    // console.log("newMessage",newMessage)
+
     // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
     formbutton.textContent = "Verstuur"
-    // formbutton.disabled = false
-    // textarea.value=""
+    formbutton.disabled = false
+    textarea.value=""
 
     // Overschrijf de bestaande HTML met de nieuwe state!
-    messages.outerHTML = newState.outerHTML
+    // messages.outerHTML = newState.outerHTML
 
+    // Voeg het laatste bericht toe aan de bestaande messages voor de nieuwe state!
+    messages.insertBefore(newMessage, messages.firstChild);
+    //Geef het nieuwe bericht een mooie kleurtje voor de succes state 
+    // console.log(messages.querySelector("p:first-child")`)
+    messages.querySelector("p:first-child").setAttribute('style','background:gold')
   })
 
 </script>

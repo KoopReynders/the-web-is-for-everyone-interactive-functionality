@@ -31,7 +31,7 @@ app.get('/', async function (request, response) {
   // Doe een fetch naar de data die je nodig hebt
   // const apiResponse = await fetch('https://fdnd.directus.app/items/person/65')
   const apiResponse = await fetch('https://fdnd.directus.app/items/person/?filter={"team":"Rocket"}')
-  const messagesResponse = await fetch(`https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}`)
+  const messagesResponse = await fetch(`https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}&sort=-created`)
   
   const apiResponseJSON = await apiResponse.json()
   const messagesResponseJSON = await messagesResponse.json()
