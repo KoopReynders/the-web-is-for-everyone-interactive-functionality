@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDND Teams {{team}}</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    
+
+
+
 <h2>Persons in Team: {{team}}</h2>
 
 <ul>
@@ -46,7 +60,7 @@
     <br><br>
       <label>
         Naam:
-        <input type="text" name="from" required>
+        <input type="text" name="from" required placeholder="Naam">
       </label>
       <br><br>
       <label>
@@ -72,6 +86,7 @@
 
   const myform = document.querySelector("form")
   const formbutton = document.querySelector("form button#stuur")
+  const namefield = document.querySelector("form input")
   const textarea = document.querySelector("form textarea")
   const messages = document.querySelector("#berichten")
 
@@ -82,8 +97,10 @@
     event.preventDefault()
 
     //Loading state tonen
+    formbutton.classList.add("loading")
     formbutton.textContent = "loading..."
     formbutton.disabled = true
+
   
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
@@ -110,18 +127,28 @@
     // console.log("newMessage",newMessage)
 
     // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
+    formbutton.classList.remove("loading")
     formbutton.textContent = "Verstuur"
     formbutton.disabled = false
+    namefield.value=""
     textarea.value=""
+
+
 
     // Overschrijf de bestaande HTML met de nieuwe state!
     // messages.outerHTML = newState.outerHTML
+
 
     // Voeg het laatste bericht toe aan de bestaande messages voor de nieuwe state!
     messages.insertBefore(newMessage, messages.firstChild);
     //Geef het nieuwe bericht een mooie kleurtje voor de succes state 
     // console.log(messages.querySelector("p:first-child")`)
-    messages.querySelector("p:first-child").setAttribute('style','background:gold')
+    //messages.querySelector("p:first-child").setAttribute('style','background:gold')
+    messages.querySelector("p:first-child").classList.add('highlight')
   })
 
 </script>
+
+
+</body>
+</html>
