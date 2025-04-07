@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDND - This Website is Mine!</title>
+
+    {% comment %} <link rel="stylesheet" href="/style.css"> {% endcomment %}
+
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      section#form{
+        background: rgb(10 10 10 / 20%);
+        padding: 2rem;
+        label{
+          display: block;
+          margin: 1rem 0;
+        }
+        input, textarea{
+          display: block;
+          /* width: fit-content; */
+        }
+      }
+
+      /* colors */
+      .green{
+        background: DARKSEAGREEN;
+        color: DARKSEAGREEN;
+      }
+      .red{
+        background: LIGHTCORAL;
+        color: LIGHTCORAL;
+      }
+      .blue{
+        background: THISTLE;
+        color: THISTLE;
+      }
+      .grey{
+        background: #ddd;
+        color: black;
+      }
+
+      main{
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+        max-width: 20rem;
+        height: 40rem;
+        padding: 0;
+        padding-top: 2rem;
+        margin: 2rem auto;
+        background: #ccc;
+        border-radius: 1rem;
+      }
+      main > *{
+        margin: 0;
+        padding: 0 2rem;
+      }
+      header{
+        background: rgb(0 0 0 / 60%);
+        color: rgb(255 255 255 / 40%);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 1rem;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font: small monospace;
+      }
+      code{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 0;
+      }
+      {{ person.style }}
+
+</style>
+
+</head>
+<body>
+
+
+  <main class="card">
+
+    <header>Deze website is van {{ person.name }}</header>
+
+    <h1 class="title">{{ person.title }}</h1>
+
+    <p class="text">
+      {{ person.bio }}
+    </p>
+
+
+    <code class="code">
+      {{ person.style }}
+    </code>
+
+  </main>
+
+
+
+
+  <section id="form">
+    <details>
+      <summary>Data</summary>
+      My website
+      <pre>{{ person | json:4 }}</pre>
+    </details>
+    
+    <form method="post" action="/mywebsite">
+
+      <h2>Gegevens opslaan</h2>
+
+      <label>
+        <span>Naam:</span>
+        <input type="text" name="from" placeholder="Naam" value="{{ person.name }}">
+      </label>
+
+      <label>
+        <span>Bio:</span>
+        <textarea name="text" placeholder="typ typ typ">{{ person.bio }}</textarea>
+      </label>
+
+      <label>
+        <span>CSS Style:</span>
+        <textarea name="code" placeholder="typ typ typ">{{ person.style }}</textarea>
+      </label>
+
+
+      <input name="id" type="hidden" value="{{ person.id }}">
+      <button type="submit" id="stuur">Verstuur</button>
+
+
+    </form>
+
+  </section> 
+
+</body>
+</html>

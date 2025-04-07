@@ -44,7 +44,7 @@
     </form>
 -->
 
-    <h2>Huidige berichten</h2>
+    <h2>Berichten</h2>
 
     <div id="berichten">
       {% for message in messages %}
@@ -54,24 +54,25 @@
       {% endfor %}
     </div>
 
-
-    <h2>Voeg een bericht toe</h2>
     <form method="post" action="/">
-    <br><br>
+
+      <h2>Voeg een bericht toe</h2>
+
       <label>
-        Naam:
+        <span>Naam:</span>
         <input type="text" name="from" required placeholder="Naam">
       </label>
-      <br><br>
+
       <label>
-        Bericht:
+        <span>Bericht:</span>
         <textarea name="text" required placeholder="typ typ typ"></textarea>
       </label>
-      <br><br>
-      <button type="submit" id="stuur">Verstuur</button>
+
+      <label>
+        <button type="submit" id="stuur"><span class="text">Verstuur</span></button>
+      </label>
     </form>
   
-
 <details>
     <summary>Data</summary>
     Messages
@@ -97,16 +98,18 @@
     event.preventDefault()
 
     //Loading state tonen
-    formbutton.classList.add("loading")
+    myform.classList.add("loading")
     formbutton.textContent = "loading..."
     formbutton.disabled = true
+    //laatste succes state weghalen
+    messages.querySelector("p:first-child").classList.remove('highlight')
 
   
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
     // Inclusief alle formulierelementen
     const response = await fetch(myform.action, {
-      method: myform.method,
+      method: myform.method, //POST dus
       body: new URLSearchParams(new FormData(myform))
     })
 
@@ -120,24 +123,16 @@
     const responseDOM = parser.parseFromString(responseText, 'text/html')
     // console.log("responseDOM",responseDOM)
 
-    // Zoek in de responseDOM onze nieuwe state op, die we via Liquid hebben gerenderd
-    // const newState = responseDOM.querySelector("#berichten")
-    // console.log("newstate",newState)
+    // Zoek in de responseDOM onze nieuwe state op (die we via Liquid hebben gerenderd)
     const newMessage = responseDOM.querySelector("#berichten > p:first-child")
     // console.log("newMessage",newMessage)
 
     // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
-    formbutton.classList.remove("loading")
+    myform.classList.remove("loading")
     formbutton.textContent = "Verstuur"
     formbutton.disabled = false
-    namefield.value=""
-    textarea.value=""
-
-
-
-    // Overschrijf de bestaande HTML met de nieuwe state!
-    // messages.outerHTML = newState.outerHTML
-
+    namefield.value="" //input field leeg haleb
+    textarea.value="" //textarea leeg halen
 
     // Voeg het laatste bericht toe aan de bestaande messages voor de nieuwe state!
     messages.insertBefore(newMessage, messages.firstChild);
@@ -148,7 +143,6 @@
   })
 
 </script>
-
 
 </body>
 </html>

@@ -35,9 +35,6 @@ app.get('/', async function (request, response) {
   
   const apiResponseJSON = await apiResponse.json()
   const messagesResponseJSON = await messagesResponse.json()
-
-  // Controleer eventueel de data in je console
-  // (Let op: dit is _niet_ de console van je browser, maar van NodeJS, in je terminal)
   // console.log(apiResponseJSON)
 
 
@@ -50,6 +47,22 @@ app.get('/', async function (request, response) {
   })
 })
 
+app.post('/', async function (request, response) {
+  console.log("APP.POST")
+  await fetch('https://fdnd.directus.app/items/messages/', {
+    method: 'POST',
+    body: JSON.stringify({
+      for: `Team Rocket`,
+      from: request.body.from,
+      text: request.body.text
+    }),
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  });
+
+  response.redirect(303, '/')
+})
 
 /*
 // Zie https://expressjs.com/en/5x/api.html#app.get.method over app.get()
@@ -87,22 +100,42 @@ app.post(…, async function (request, response) {
 })
   */
 
-app.post('/', async function (request, response) {
-  console.log("APP.POST")
-  await fetch('https://fdnd.directus.app/items/messages/', {
-    method: 'POST',
+
+app.get('/mywebsite', async function (reques, response) {
+  // Doe een fetch naar de data die je nodig hebt
+  const my_id = "cfbc1833-8687-47f2-9ae9-13cdb8843bde"
+  const apiResponse = await fetch('https://fdnd.directus.app/items/my_website/'+my_id)
+  // console.log(my_id)
+  
+  const apiResponseJSON = await apiResponse.json()
+  // console.log(apiResponseJSON)
+
+  // Render mywebsite.liquid uit de Views map
+  // Geef hier data aan mee
+  response.render('mywebsite.liquid', {
+    person:apiResponseJSON.data
+  })
+})
+app.post('/mywebsite', async function (request, response) {
+  console.log("post /mywebsite",request.body)
+
+  await fetch('https://fdnd.directus.app/items/my_website/'+request.body.id, {
+    method: 'PATCH',
     body: JSON.stringify({
-      for: `Team Rocket`,
-      from: request.body.from,
-      text: request.body.text
+      name: request.body.from,
+      bio: request.body.text,
+      style: request.body.code
     }),
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   });
 
-  response.redirect(303, '/')
+  response.redirect(303, '/mywebsite')
 })
+
+
+
 
 
 
@@ -113,5 +146,5 @@ app.set('port', process.env.PORT || 8000)
 // Start Express op, gebruik daarbij het zojuist ingestelde poortnummer op
 app.listen(app.get('port'), function () {
   // Toon een bericht in de console
-  console.log(`Daarna kun je via http://localhost:${app.get('port')}/ jouw interactieve website bekijken.\n\nThe Web is for Everyone. Maak mooie dingen 🙂`)
+  console.log(`click click click naar: http://localhost:${app.get('port')}/`)
 })

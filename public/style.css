@@ -1,8 +1,108 @@
-.highlight{
-    background-color: gold;
-    padding: 100px;
+body {
+    background: #efefef;
+    margin: 0; 
+    padding: 2em;
+    font: normal 18px/150% Helvetica, sans-serif;
 }
-.loading{
+h1, h2, form {
+    margin: 0;
+}
+h2 {
+    /* margin-top: 2em; */
+}
+form {
+    /* background: pink; */
+    border: 1px solid black;
+    padding: 1em;
+    input, textarea, button {
+        font: normal 18px/150% Helvetica, sans-serif;
+    }
+    input:focus {
+        /* background: gold; */
+    }
+    label {
+        padding: 1em;
+        display: block;
+        display: flex;
+        gap: 1em;
+        /* background: gold; */
+        /* text-align: right; */
+        span {
+            width: 6ch;
+            background: pink;
+        }
+    }
+    button {
+        /* justify-content: flex-end; */
+        width: 10em;
+        height: 2em;
+        transition: all 1s ease-in-out;
+
+        position: relative;
+        /* padding: 8px 16px; */
+        /* background: #009579; */
+        border: none;
+        outline: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+    label > * {
+        /* flex-grow: 1; */
+    }
+}
+
+
+.highlight {
+    background-color: gold;
+    padding: 1em;
+}
+.loading button {
     background-color: gold;
     color: black;
 }
+
+/* .button--loading .button__text {
+    visibility: hidden;
+    opacity: 0;
+  } */
+  
+  button {
+    position: relative;
+    /* display:flex; */
+    /* justify-content: center; */
+  }
+  button span {
+    /* display: inline-block; */
+    position: relative;
+    /* margin: 0 auto; */
+    /* width: fit-content; */
+    /* width: 200px; */
+    background: pink;
+  }
+
+  /* .loading button::after { */
+  button span::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 0;
+    left: 80px;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spinner 1s infinite linear;
+  }
+  
+  @keyframes spinner {
+    from {
+      transform: rotate(0turn);
+    }
+  
+    to {
+      transform: rotate(1turn);
+    }
+  }
