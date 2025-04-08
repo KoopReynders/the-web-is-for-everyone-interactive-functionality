@@ -11,8 +11,14 @@
       body{
         margin: 0;
         padding: 0;
+        font: 20px/1.5 "Fira Sans", sans-serif;
       }
-      section#form{
+      .edit{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        height: 100vh;
+      }
+      aside#form{
         background: rgb(10 10 10 / 20%);
         padding: 2rem;
         label{
@@ -80,6 +86,7 @@
         bottom: 0;
         margin: 0;
         padding: 0;
+        line-height: 1.1;
       }
       {{ person.style }}
 
@@ -89,60 +96,109 @@
 <body>
 
 
-  <main class="card">
+{% if persons %}
 
-    <header>Deze website is van {{ person.name }}</header>
+  <h1>Alle websites:</h1>
 
-    <h1 class="title">{{ person.title }}</h1>
+  <ul>
+    {% for person in persons %}
+        <li>
+          <a href="/mywebsite/{{ person.id }}">{{ person.name }}</a> - {{ person.bio | truncate: 30 }}
+        </li>
+    {% endfor %}
+  </ul>
 
-    <p class="text">
-      {{ person.bio }}
-    </p>
+  <form method="post" action="/createwebsite">
 
+  <h2>Maak je eigen website:</h2>
 
-    <code class="code">
-      {{ person.style }}
-    </code>
+  <label>
+    <span>Naam:</span>
+    <input type="text" name="from" placeholder="Naam" required>
+  </label>
+  <input type="hidden" name="title" value="Titel van jouw website">
+  <input type="hidden" name="text" value="Schrijf hier iets over jezelf">
+  <input type="hidden" name="code" value=".card{
+ background-color: THISTLE;
+}
+.title{
+ color: LIGHTCORAL;
+ font-family: impact;
+ font-size: xx-large;
+}
+.text{
+ background-color: gold;
+ color: black;
+ font-family: fantasy;
+}">
+  <button type="submit" id="stuur">Maak website</button>
 
-  </main>
+</form>
+ 
 
+{% else %}
 
+  <div class="edit">
 
+    <main class="card">
 
-  <section id="form">
-    <details>
-      <summary>Data</summary>
-      My website
-      <pre>{{ person | json:4 }}</pre>
-    </details>
-    
-    <form method="post" action="/mywebsite">
+      <header>Deze website is van {{ person.name }}</header>
 
-      <h2>Gegevens opslaan</h2>
+      <h1 class="title">{{ person.title }}</h1>
 
-      <label>
-        <span>Naam:</span>
-        <input type="text" name="from" placeholder="Naam" value="{{ person.name }}">
-      </label>
+      <p class="text">
+        {{ person.bio }}
+      </p>
 
-      <label>
-        <span>Bio:</span>
-        <textarea name="text" placeholder="typ typ typ">{{ person.bio }}</textarea>
-      </label>
+      {% comment %} <code class="code">
+        {{ person.style }}
+      </code> {% endcomment %}
 
-      <label>
-        <span>CSS Style:</span>
-        <textarea name="code" placeholder="typ typ typ">{{ person.style }}</textarea>
-      </label>
+    </main>
 
+    <aside id="form">
+      <a href="/mywebsite">terug</a>
+      
+      <form method="post" action="/savewebsite">
 
-      <input name="id" type="hidden" value="{{ person.id }}">
-      <button type="submit" id="stuur">Verstuur</button>
+        <h2>Gegevens opslaan</h2>
 
+        <label>
+          <span>Naam:</span>
+          <input type="text" name="from" placeholder="Naam" value="{{ person.name }}">
+        </label>
 
-    </form>
+        <label>
+          <span>Titel:</span>
+          <input type="text" name="title" placeholder="typ typ typ" value="{{ person.title }}">
+        </label>
 
-  </section> 
+        <label>
+          <span>Bio:</span>
+          <textarea name="text" placeholder="typ typ typ">{{ person.bio }}</textarea>
+        </label>
+
+        <label>
+          <span>CSS Style:</span>
+          <textarea name="code" placeholder="all we do is code">{{ person.style }}</textarea>
+        </label>
+
+        <input name="id" type="hidden" value="{{ person.id }}">
+        <button type="submit" id="stuur">Opslaan</button>
+
+      </form>
+
+      <details>
+        <summary>Data</summary>
+        My website
+        <pre>{{ person | json:4 }}</pre>
+      </details>
+
+    </aside>
+
+  </div>
+
+{% endif %}
 
 </body>
 </html>

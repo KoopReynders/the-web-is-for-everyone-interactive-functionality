@@ -1,6 +1,6 @@
-// require('dotenv').config()
-// const PORT = config.env.PORT || 3000
-// console.log("PORT " + PORT)
+import 'dotenv/config'
+// console.log("PORT " + process.env.PORT)
+// console.log("process.env.KEY",process.env.KEY)
 
 // Importeer het npm package Express (uit de door npm aangemaakte node_modules map)
 // Deze package is geïnstalleerd via `npm install`, en staat als 'dependency' in package.json
@@ -35,12 +35,11 @@ app.get('/', async function (request, response) {
   // Doe een fetch naar de data die je nodig hebt
   // const apiResponse = await fetch('https://fdnd.directus.app/items/person/65')
   const apiResponse = await fetch('https://fdnd.directus.app/items/person/?filter={"team":"Rocket"}')
-  const messagesResponse = await fetch(`https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}&sort=-created`)
+  const messagesResponse = await fetch('https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}&sort=-created')
   
   const apiResponseJSON = await apiResponse.json()
   const messagesResponseJSON = await messagesResponse.json()
   // console.log(apiResponseJSON)
-
 
   // Render index.liquid uit de Views map
   // Geef hier eventueel data aan mee
@@ -105,11 +104,25 @@ app.post(…, async function (request, response) {
   */
 
 
-app.get('/mywebsite', async function (reques, response) {
+app.get('/mywebsite', async function (request, response) {
   // Doe een fetch naar de data die je nodig hebt
-  const my_id = "cfbc1833-8687-47f2-9ae9-13cdb8843bde"
-  const apiResponse = await fetch('https://fdnd.directus.app/items/my_website/'+my_id)
-  // console.log(my_id)
+  const apiResponse = await fetch(process.env.API+'?sort=-date_created')
+  const apiResponseJSON = await apiResponse.json()
+  // console.log(apiResponseJSON)
+
+  // Render mywebsite.liquid uit de Views map
+  // Geef hier data aan mee
+  response.render('mywebsite.liquid', {
+    persons:apiResponseJSON.data
+  })
+})
+
+app.get('/mywebsite/:id', async function (request, response) {
+  // Doe een fetch naar de data die je nodig hebt
+  // const my_id = "cfbc1833-8687-47f2-9ae9-13cdb8843bde"
+  const siteID = request.params.id
+  const apiResponse = await fetch(process.env.API+siteID)
+  // console.log(my_id)`
   
   const apiResponseJSON = await apiResponse.json()
   // console.log(apiResponseJSON)
@@ -120,22 +133,60 @@ app.get('/mywebsite', async function (reques, response) {
     person:apiResponseJSON.data
   })
 })
-app.post('/mywebsite', async function (request, response) {
-  console.log("post /mywebsite",request.body)
 
-  await fetch('https://fdnd.directus.app/items/my_website/'+request.body.id, {
+
+
+
+app.post('/savewebsite', async function (request, response) {
+  // console.log("post - save my website",request.body)
+
+  const patchResponse = await fetch(process.env.API+request.body.id, {
+    
     method: 'PATCH',
     body: JSON.stringify({
       name: request.body.from,
+      title: request.body.title,
       bio: request.body.text,
       style: request.body.code
     }),
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
-  });
 
-  response.redirect(303, '/mywebsite')
+  })
+
+  const patchResponseJSON = await patchResponse.json();
+  // console.log("RESULT", response.status)
+  const siteID = patchResponseJSON.data.id
+
+  response.redirect(303, '/mywebsite/'+siteID)
+})
+
+
+
+
+app.post('/createwebsite', async function (request, response) {
+
+  const postResponse = await fetch(process.env.API, {
+
+    method: 'POST',
+    body: JSON.stringify({
+      name: request.body.from,
+      title: request.body.title,
+      bio: request.body.text,
+      style: request.body.code
+    }),
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+
+  })
+
+  const postResponseJSON = await postResponse.json();
+  // console.log(postResponseJSON.data.id);
+  const siteID = postResponseJSON.data.id
+
+  response.redirect(303, '/mywebsite/'+siteID)
 })
 
 
