@@ -8,17 +8,20 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    
 
+<header>
+  <h1>Team {{team}}</h1>
+</header>
 
+<footer>
+  <h2>Persons</h2>
 
-<h2>Persons in Team: {{team}}</h2>
-
-<ul>
-{% for person in persons %}
+  <ul>
+  {% for person in persons %}
     <li>{{ person.name }}</li>
   {% endfor %}
   </ul>
+</footer>
 
 <!--
     <form method="POST" action="/detail/{{ id }}/unlike">
@@ -44,6 +47,7 @@
     </form>
 -->
 
+<main>
     <h2>Berichten</h2>
 
     <div id="berichten">
@@ -53,10 +57,12 @@
       <p>Er zijn nog geen berichten voor dit team.</p>
       {% endfor %}
     </div>
+  </main>
 
+  <aside>
     <form method="post" action="/">
 
-      <h2>Voeg een bericht toe</h2>
+      <h3>Voeg een bericht toe</h2>
 
       <label>
         <span>Naam:</span>
@@ -68,39 +74,44 @@
         <textarea name="text" required placeholder="typ typ typ"></textarea>
       </label>
 
-      <label>
         <button type="submit" id="stuur"><span class="text">Verstuur</span></button>
-      </label>
+
     </form>
+
+
+    <details>
+      <summary>Data</summary>
+      Messages
+      <pre>{{ messages | json:4 }}</pre>
+      Persons
+      <pre>{{ persons | json:4 }}</pre>
+  </details>
   
-<details>
-    <summary>Data</summary>
-    Messages
-    <pre>{{ messages | json:4 }}</pre>
-    Persons
-    <pre>{{ persons | json:4 }}</pre>
-</details>
+</aside>
+
+
+
 
 
 
 <script>
 
-  const myform = document.querySelector("form")
-  const formbutton = document.querySelector("form button#stuur")
-  const namefield = document.querySelector("form input")
-  const textarea = document.querySelector("form textarea")
+  const messageForm = document.querySelector("form")
+  const formButton = document.querySelector("form button#stuur")
+  const formNameField = document.querySelector("form input")
+  const formTextarea = document.querySelector("form textarea")
   const messages = document.querySelector("#berichten")
 
   // Als er op de submit button wordt geklikt ...
-  myform.addEventListener("submit", async function(event) {
+  messageForm.addEventListener("submit", async function(event) {
     // Voorkom de standaard submit van de browser
     // Let op: hiermee overschrijven we de default Loading state van de browser...
     event.preventDefault()
 
     //Loading state tonen
-    myform.classList.add("loading")
-    formbutton.textContent = "loading..."
-    formbutton.disabled = true
+    messageForm.classList.add("loading")
+    formButton.textContent = "loading..."
+    formButton.disabled = true
     //laatste succes state weghalen
     messages.querySelector("p:first-child").classList.remove('highlight')
 
@@ -108,9 +119,9 @@
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
     // Inclusief alle formulierelementen
-    const response = await fetch(myform.action, {
-      method: myform.method, //POST dus
-      body: new URLSearchParams(new FormData(myform))
+    const response = await fetch(messageForm.action, {
+      method: messageForm.method, //POST dus
+      body: new URLSearchParams(new FormData(messageForm))
     })
 
     // De server redirect op de normale manier, en geeft HTML terug
@@ -128,11 +139,11 @@
     // console.log("newMessage",newMessage)
 
     // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
-    myform.classList.remove("loading")
-    formbutton.textContent = "Verstuur"
-    formbutton.disabled = false
-    namefield.value="" //input field leeg haleb
-    textarea.value="" //textarea leeg halen
+    messageForm.classList.remove("loading")
+    formButton.textContent = "Verstuur"
+    formButton.disabled = false
+    formNameField.value="" //input field leeg haleb
+    formTextarea.value="" //textarea leeg halen
 
     // Voeg het laatste bericht toe aan de bestaande messages voor de nieuwe state!
     messages.insertBefore(newMessage, messages.firstChild);
@@ -143,6 +154,9 @@
   })
 
 </script>
+
+
+
 
 </body>
 </html>

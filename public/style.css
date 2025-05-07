@@ -1,3 +1,9 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 body {
     background: #efefef;
     margin: 0; 
@@ -6,12 +12,34 @@ body {
 }
 h1, h2, form {
     margin: 0;
+    margin-top: 1rem;
 }
 h2 {
     /* margin-top: 2em; */
 }
+
+/* GRID */
+body{
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+header{
+  grid-column: span 3;
+}
+
+footer ul{
+  margin: 0;
+  padding: 0;
+}
+footer li{
+ display: inline-block;
+ margin: 0.4rem;
+}
+
 form {
     /* background: pink; */
+    /* max-width: 40rem; */
     border: 1px solid black;
     padding: 1em;
     input, textarea, button {
@@ -29,22 +57,26 @@ form {
         /* text-align: right; */
         span {
             width: 6ch;
-            background: pink;
+            /* background: pink; */
         }
     }
     button {
         /* justify-content: flex-end; */
         width: 10em;
         height: 2em;
-        transition: all 1s ease-in-out;
+        transition: all 0.3s ease-out;
 
         position: relative;
         /* padding: 8px 16px; */
-        /* background: #009579; */
+        background-color: #009579;
         border: none;
         outline: none;
         border-radius: 2px;
         cursor: pointer;
+
+        &:hover{
+          background-color: gold;
+        }
     }
     label > * {
         /* flex-grow: 1; */
@@ -77,11 +109,11 @@ form {
     /* margin: 0 auto; */
     /* width: fit-content; */
     /* width: 200px; */
-    background: pink;
+    /* background: pink; */
   }
 
   /* .loading button::after { */
-  button span::after {
+  /* button span::after {
     content: "";
     position: absolute;
     width: 12px;
@@ -95,9 +127,9 @@ form {
     border-top-color: #000;
     border-radius: 50%;
     animation: spinner 1s infinite linear;
-  }
+  } */
   
-  @keyframes spinner {
+  /* @keyframes spinner {
     from {
       transform: rotate(0turn);
     }
@@ -105,4 +137,11 @@ form {
     to {
       transform: rotate(1turn);
     }
-  }
+  } */
+
+div#berichten{
+  /* max-width: 40rem; */
+}
+div#berichten p{
+  border-bottom: 1px black solid;
+}
