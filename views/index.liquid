@@ -115,7 +115,7 @@
     //laatste succes state weghalen
     messages.querySelector("p:first-child").classList.remove('highlight')
 
-  
+
     // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
     // Gebruik daarvoor het action en method attribuut van het originele formulier
     // Inclusief alle formulierelementen
@@ -124,15 +124,18 @@
       body: new URLSearchParams(new FormData(messageForm))
     })
 
+
     // De server redirect op de normale manier, en geeft HTML terug
     // (De server weet niet eens dat deze fetch via client-side JavaScript gebeurde)
     const responseText = await response.text()
+
 
     // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
     // Parse de nieuwe HTML en maak hiervan een nieuw Document Object Model in het geheugen
     const parser = new DOMParser()
     const responseDOM = parser.parseFromString(responseText, 'text/html')
     // console.log("responseDOM",responseDOM)
+
 
     // Zoek in de responseDOM onze nieuwe state op (die we via Liquid hebben gerenderd)
     const newMessage = responseDOM.querySelector("#berichten > p:first-child")
@@ -144,6 +147,7 @@
     formButton.disabled = false
     formNameField.value="" //input field leeg haleb
     formTextarea.value="" //textarea leeg halen
+
 
     // Voeg het laatste bericht toe aan de bestaande messages voor de nieuwe state!
     messages.insertBefore(newMessage, messages.firstChild);
