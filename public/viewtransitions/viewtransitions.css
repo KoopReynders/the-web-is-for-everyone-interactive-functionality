@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+h1 {
+    color: #333;
+}
+p {
+    margin: 10px 0;
+}
+.active{
+    background-color: gold;
+}
+
+
+@view-transition {
+  navigation: auto;
+}
+div#berichten{
+    view-transition-name: messages;
+}
+/* Both Pages */
+::view-transition-old(messages) {
+    animation: slide-out 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  
+  ::view-transition-new(messages) {
+    animation: slide-in 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  /* Both Pages */
+@keyframes slide-out {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(calc(10% * var(--direction)));
+    }
+  }
+  @keyframes slide-in {
+    0% {
+      opacity: 0;
+      transform: translateY(calc(-10% * var(--direction)));
+    }
+    100% {
+      transform: translateY(0%);
+      /* rotate: -360deg; */
+    }
+  }
