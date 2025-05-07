@@ -28,7 +28,33 @@ app.engine('liquid', engine.express())
 app.set('views', './views')
 
 
-// console.log('Let op: Er zijn nog geen routes. Voeg hier dus eerst jouw GET en POST routes toe.')
+  //FILE SYSTEM
+  /*
+  import fs from 'fs'
+
+  const img = './public/img/businessman-loop.gif'
+  //FILTE SYSTEM UITLEZEN
+  const stats = fs.statSync(img)
+  console.log("FS",stats)
+  // const fileSizeInBytes = stats.size;
+  // console.log('Size in bytes:', fileSizeInBytes);
+  // const fileSizeInMegaBytes = fileSizeInBytes / (1024 * 1024);
+  // console.log('Size in MegaBytes:', fileSizeInMegaBytes);
+`
+  import sizeOf from 'image-size'
+
+  const { height, width } = sizeOf(img)
+  console.log(height, width)
+*/
+  
+app.get('/performance', async function (request, response) {
+  //https://nodejs.org/api/fs.html#fs_fs_stat_path_callback
+  //https://bobbyhadz.com/blog/get-size-of-file-in-node-js
+
+  response.render('performance.liquid')
+})
+
+
 
 app.get('/', async function (request, response) {
   console.log("APP.GET")
@@ -51,8 +77,8 @@ app.get('/', async function (request, response) {
 })
 
 app.post('/', async function (request, response) {
-  console.log("APP.POST")
-  await fetch('https://fdnd.directus.app/items/messages/', {
+  console.log("APP.POST", request.body)
+  const postResponse = await fetch('https://fdnd.directus.app/items/messages/', {
     method: 'POST',
     body: JSON.stringify({
       for: `Team Rocket`,
@@ -63,6 +89,9 @@ app.post('/', async function (request, response) {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   });
+
+  const postResponseJSON = await postResponse.json();
+  console.log(postResponseJSON);
 
   response.redirect(303, '/')
 })
@@ -103,6 +132,67 @@ app.post(…, async function (request, response) {
 })
   */
 
+
+
+app.get('/messageboard', async function (request, response) {
+  console.log("MESSAGEBOARD GET")
+  // Fetch de data die je nodig hebt, de messages met filter Team Rocket
+  const messagesResponse = await fetch('https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}&sort=-created')
+  const messagesResponseJSON = await messagesResponse.json()
+
+  // Render de bijhorende view en geef hier data mee
+  response.render('messageboard.liquid', {
+    messages: messagesResponseJSON.data
+  })
+})
+app.post('/message', async function (request, response) {
+  console.log("MESSAGEBOARD POST MESSAGE", request.body)
+  const postResponse = await fetch('https://fdnd.directus.app/items/messages/', {
+    method: 'POST',
+    body: JSON.stringify({
+      for: `Team Rocket`,
+      from: request.body.from,``
+      text: request.body.text
+    }),
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  });
+
+  if(request.body.enhanced){
+    console.log("if clientside")
+    const postResponseJSON = await postResponse.json();
+    //Als we een clientside post hebben, dan renderen we alleen de partial met de data die net gepost is
+    response.render('partials/message.liquid', {message: postResponseJSON.data})
+
+  }else{
+    console.log("if serverside")
+    response.redirect(303, '/messageboard')
+  }
+})
+
+
+
+
+
+
+
+
+/*
+app.get('/message', async function (request, response) {
+  console.log("MESSAGE GET")
+  // Render message.liquid uit de Views map mee
+  const msgObj = {
+    created:"2025-04-03T10:59:58.942Z",
+    from:"Kopo Dopo",
+    text: "Responsve obj created. Het werkt. Nu de post response oppakken, komt er dan terug wat er (succesvol) is opgeslagen?"
+  }
+  // console.log("MSG",msgObj)
+  // let jsonObject = JSON.parse(jsonString);
+
+  response.render('partials/message.liquid', {message: msgObj})
+})
+*/
 
 
 // Stel het poortnummer in waar Express op moet gaan luisteren

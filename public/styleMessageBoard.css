@@ -1,0 +1,126 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+    background: #efefef;
+    margin: 0; 
+    padding: 2em;
+    font: normal 18px/150% Helvetica, sans-serif;
+}
+h1, h2, form {
+    margin: 0;
+    margin-top: 1rem;
+}
+h2 {
+    /* margin-top: 2em; */
+}
+/* GRID */
+body{
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+header{
+  grid-column: span 2;
+}
+
+
+/* FORM STYLING */
+form {
+    /* background: pink; */
+    max-width: 40rem;
+    border: 1px solid black;
+    padding: 1em;
+    input, textarea, button {
+        font: normal 18px/150% Helvetica, sans-serif;
+    }
+    input:focus {
+        /* background: gold; */
+    }
+    label {
+        padding: 1em;
+        display: block;
+        display: flex;
+        gap: 1em;
+        /* background: gold; */
+        /* text-align: right; */
+        span {
+            width: 6ch;
+            /* background: pink; */
+        }
+    }
+    button {
+        /* justify-content: flex-end; */
+        width: 10em;
+        height: 2em;
+        transition: all 0.3s ease-out;
+
+        position: relative;
+        /* padding: 8px 16px; */
+        background-color: #009579;
+        border: none;
+        outline: none;
+        border-radius: 2px;
+        cursor: pointer;
+
+        &:hover{
+          background-color: gold;
+        }
+    }
+    label > * {
+        /* flex-grow: 1; */
+    }
+}
+
+
+.highlight {
+    background-color: gold;
+    padding: 1em;
+}
+.loading button {
+    background-color: gold;
+    color: black;
+}
+  
+  button {
+    position: relative;
+    /* display:flex; */
+    /* justify-content: center; */
+  }
+  button span {
+    /* display: inline-block; */
+    position: relative;
+    /* margin: 0 auto; */
+    /* width: fit-content; */
+    /* width: 200px; */
+    /* background: pink; */
+  }
+
+/* BERICHTEN */
+div#berichten p{
+  border-bottom: 1px black solid;
+}
+/* View transition */
+div#berichten{
+  max-width: 40rem;
+  view-transition-name: messages;
+}
+::view-transition-new(messages) {
+  animation: slide-in 0.5s ease-out;
+  /* animation: slide-in 0.5s cubic-bezier(0.86, 0, 0.07, 1); */
+}
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-4rem);
+    /* rotate: 0; */
+  }
+  100% {
+    transform: translateY(0%);
+    /* rotate: 360deg; */
+  }
+}

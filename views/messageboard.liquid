@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messageboard - POST a message</title>
+    <link rel="stylesheet" href="/styleMessageBoard.css">
+</head>
+<body>
+
+  <header>
+
+    <h1>Messageboard - POST a message</h1>
+
+  </header>
+
+
+
+  <aside>
+
+    <h2>Formulier</h2>
+
+    <!-- Message form met action naar de route /message -->
+
+   <form method="post" action="/message">
+
+      <h3>Voeg een bericht toe</h3>
+    
+      <label>
+        <span>Naam:</span>
+        <input type="text" name="from" required placeholder="Naam">
+      </label>
+    
+      <label>
+        <span>Bericht:</span>
+        <textarea name="text" required placeholder="typ typ typ"></textarea>
+      </label>
+    
+      <button type="submit" id="stuur"><span class="text">Verstuur</span></button>
+    
+    </form>
+
+  </aside>
+
+
+
+  <main>
+
+    <h2>Berichten</h2>
+
+    <!-- Messages met in de loop de partial message.liquid -->
+
+    <div id="berichten">
+
+      {% for message in messages %}
+        
+        {% render 'partials/message.liquid', message: message %}
+
+      {% else %}
+
+      <p>Er zijn nog geen berichten voor dit team.</p>
+
+      {% endfor %}
+
+    </div>
+
+  </main>
+
+
+
+<!-- Client-Side script voor enhancement -->
+
+<script>
+
+  const messageForm = document.querySelector("form")
+  const formButton = document.querySelector("form button#stuur")
+  const formNameField = document.querySelector("form input")
+  const formTextarea = document.querySelector("form textarea")
+  const messages = document.querySelector("#berichten")
+
+  // Als er op de submit button wordt geklikt ...
+  messageForm.addEventListener("submit", async function(event) {
+    // Voorkom de standaard submit van de browser
+    // Let op: hiermee overschrijven we de default Loading state van de browser...
+    event.preventDefault()
+
+    
+    //Loading state tonen:
+    // messageForm.classList.add("loading")
+    formButton.textContent = "loading..."
+    // formButton.disabled = true
+
+
+    //formdata voorbereiden:
+    let formData = new FormData(messageForm);
+    // Extra data toevoegen aan de formdata
+    //<<< dit sturen we mee naar de server, zodat we kunnen checken of het een clientside post is...
+    // https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
+    formData.append('enhanced', true); 
+
+
+    // Data fetchen:
+    // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
+    // Gebruik daarvoor het action en method attribuut van het formulier
+    // Stuur de formulierelementen mee
+    const response = await fetch(messageForm.action, {
+      method: messageForm.method, //POST dus
+      body: new URLSearchParams(formData) // <<< Dit moet omdat server.js anders niet met de formulier data kan werken
+    })
+
+
+    // Data verwerken:
+    // De server geeft data terug als het posten goed gaat
+    // https://directus.io/docs/api/items#create-an-item
+    const responseData = await response.text()
+    // Wrap het verwerken van de data in een view transition:
+    // Eerst checken of viewtransitions bestaan in de browser, wordt het ondersteund?
+    if (document.startViewTransition) {
+    
+      document.startViewTransition(function() {
+        // data van de server toevoegen aan de DOM,aan het messages lijst in de div
+        //https://css-tricks.com/snippets/javascript/inject-html-from-a-string-of-html/
+        messages.insertAdjacentHTML('afterbegin', responseData)
+        // Voeg extra feedback een highlight op het nieuwe bericht
+        messages.firstChild.classList.add("highlight")    // Voeg voor extra feedback een highlight op het nieuwe bericht
+
+      })
+
+    // als viewtransitions niet wordt ondersteund, dan 'gewoon' nieuwe HTML toevoegen
+    } else {
+      // data van de server toevoegen aan de DOM,aan het messages lijst in de div
+      //https://css-tricks.com/snippets/javascript/inject-html-from-a-string-of-html/
+      messages.insertAdjacentHTML('afterbegin', responseData)
+      // Voeg extra feedback een highlight op het nieuwe bericht
+      messages.firstChild.classList.add("highlight")
+    }
+
+  
+
+    // Loading state weghalen
+    // messageForm.classList.remove("loading")
+    formButton.textContent = "Verstuur"
+    // formButton.disabled = false
+    formNameField.value="" //input field leeg halen
+    formTextarea.value="" //textarea leeg halen
+
+  })
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+<!-- Debug Data ding
+
+    <details>
+      <summary>Data</summary>
+      Messages
+      <pre>{{ messages | json:4 }}</pre>
+    </details>
+
+-->
+
+
+
+

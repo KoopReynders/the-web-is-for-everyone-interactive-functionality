@@ -1,0 +1,13 @@
+<p>
+  {{ message.text }} 
+  <br>van: {{ message.from }}
+  <br>date: {{ message.created | date: '%d-%m-%Y %H:%M' }}
+</p>
+
+{% comment %} 
+<details>
+    <summary>Data</summary>
+    Message
+    <pre>{{ message | json:4 }}</pre>
+</details> 
+{% endcomment %}
