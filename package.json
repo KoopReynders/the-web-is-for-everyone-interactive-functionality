@@ -25,6 +25,8 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
+    "fs": "^0.0.1-security",
+    "image-size": "^2.0.2",
     "liquidjs": "^10.21.0"
   }
 }
