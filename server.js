@@ -151,7 +151,7 @@ app.post('/message', async function (request, response) {
     method: 'POST',
     body: JSON.stringify({
       for: `Team Rocket`,
-      from: request.body.from,``
+      from: request.body.from,
       text: request.body.text
     }),
     headers: {
@@ -172,6 +172,33 @@ app.post('/message', async function (request, response) {
 })
 
 
+// ALLE WERKNEMERS
+app.get('/fresk', async function (request, response) {
+    // const role = request.params.role
+    const dynamicRole = await fetch(`https://fdnd-fresk-api.netlify.app/get-content-by-role?userRole=mechanic`)
+    const dynamicRoleJSON = await dynamicRole.json()
+    // console.log("dynamicRoleJSON",dynamicRoleJSON)
+
+    // const mechanic = await fetch(`https://fdnd-fresk-api.netlify.app/get-content-by-role?userRole=mechanic`)
+    // const mechanicJSON = await mechanic.json()
+
+    // console.log(mechanicJSON)
+
+    // response.render('dashboard.liquid', {
+      // console.log("commonData",dynamicRoleJSON.commonData)
+      // console.log("roleSpecificData",dynamicRoleJSON.roleSpecificData)
+      // console.log("assignedRepairJobs",dynamicRoleJSON.roleSpecificData.assignedRepairJobs)
+      console.log("systemDiagnosticData",dynamicRoleJSON.roleSpecificData.systemDiagnosticData)
+      const JSON_Obj = dynamicRoleJSON.roleSpecificData.systemDiagnosticData
+      for (var bleh in JSON_Obj) {
+          console.log(bleh);
+          // console.log(JSON_Obj[key]);
+      }
+      // Render de bijhorende view en geef hier data mee
+      response.render('fresk.liquid', {
+        dynamicRole: dynamicRoleJSON
+      })
+})
 
 
 

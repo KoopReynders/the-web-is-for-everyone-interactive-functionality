@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <h1>Test</h1>
+    <p>Data test.</p>
+    <pre>
+    {{ dynamicRole.roleSpecificData | json:4 }}
+    </pre>
+
+
+    <ol>
+    {% for data in dynamicRole.roleSpecificData.systemDiagnosticData %}
+        <li>{{ data[0]}} - {{ data[1].status}} - {{ data[1].details}} - {{ data[1].lastCheck}}</li>
+    {% endfor %}
+    </ol>
+
+  <details>
+      <summary>Data</summary>
+      Data
+      <pre>{{ dynamicRole | json:4 }}</pre>
+  </details>
+
+
+</body> 
+</html>

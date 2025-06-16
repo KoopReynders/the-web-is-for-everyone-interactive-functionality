@@ -1,0 +1,16 @@
+
+systemDiagnosticData {
+  'VF01-A': { status: 'Optimal', lastCheck: '2025-06-16 07:04', issues: 0 },
+  'AQ02-C': {
+    status: 'Warning',
+    lastCheck: '2025-06-16 08:04',
+    issues: 1,
+    details: 'EC reading unstable'
+  },
+  'VF02-B': {
+    status: 'Offline',
+    lastCheck: '2025-06-15 09:04',
+    issues: 1,
+    details: 'Pump motor fault reported'
+  }
+}
