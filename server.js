@@ -172,34 +172,40 @@ app.post('/message', async function (request, response) {
 })
 
 
-// ALLE WERKNEMERS
-app.get('/fresk', async function (request, response) {
-    // const role = request.params.role
-    const dynamicRole = await fetch(`https://fdnd-fresk-api.netlify.app/get-content-by-role?userRole=mechanic`)
-    const dynamicRoleJSON = await dynamicRole.json()
-    // console.log("dynamicRoleJSON",dynamicRoleJSON)
-
-    // const mechanic = await fetch(`https://fdnd-fresk-api.netlify.app/get-content-by-role?userRole=mechanic`)
-    // const mechanicJSON = await mechanic.json()
-
-    // console.log(mechanicJSON)
-
-    // response.render('dashboard.liquid', {
-      // console.log("commonData",dynamicRoleJSON.commonData)
-      // console.log("roleSpecificData",dynamicRoleJSON.roleSpecificData)
-      // console.log("assignedRepairJobs",dynamicRoleJSON.roleSpecificData.assignedRepairJobs)
-      console.log("systemDiagnosticData",dynamicRoleJSON.roleSpecificData.systemDiagnosticData)
-      const JSON_Obj = dynamicRoleJSON.roleSpecificData.systemDiagnosticData
-      for (var bleh in JSON_Obj) {
-          console.log(bleh);
-          // console.log(JSON_Obj[key]);
-      }
-      // Render de bijhorende view en geef hier data mee
-      response.render('fresk.liquid', {
-        dynamicRole: dynamicRoleJSON
-      })
+// Fresk test
+app.get('/fresk', function (request, response) {
+  // Redirect
+  response.redirect(303, `/fresk/mechanic`)
 })
+app.get('/fresk/:role', async function (request, response) {
+  const role = request.params.role 
+  console.log("role", role)
 
+  // const role = request.params.role
+  const dynamicRole = await fetch(`https://fdnd-fresk-api.netlify.app/get-content-by-role?userRole=`+role)
+  const dynamicRoleJSON = await dynamicRole.json()
+  // console.log("dynamicRoleJSON",dynamicRoleJSON)
+  // console.log("commonData",dynamicRoleJSON.commonData)
+  // console.log("roleSpecificData",dynamicRoleJSON.roleSpecificData)
+  // console.log("assignedRepairJobs",dynamicRoleJSON.roleSpecificData.assignedRepairJobs)
+  console.log("systemDiagnosticData",dynamicRoleJSON.roleSpecificData.systemDiagnosticData)
+  const JSON_Obj = dynamicRoleJSON.roleSpecificData.systemDiagnosticData
+  for (var bleh in JSON_Obj) {
+      console.log(bleh);
+      // console.log(JSON_Obj[key]);
+  }
+  Render de bijhorende view en geef hier data mee
+  response.render('fresk.liquid', {
+    dynamicRole: dynamicRoleJSON
+  })
+  // response.redirect(303, '/fresk/redirect/'+role)
+  // response.redirect(303, `/fresk/redirect/${role}`)
+})
+app.get('/fresk/redirect/:role', function (request, response) {
+  // Redirect
+  const role = request.params.role 
+  console.log("Fresk Redirect",role)
+})
 
 
 
