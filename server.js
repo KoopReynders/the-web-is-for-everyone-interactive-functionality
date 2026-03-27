@@ -97,8 +97,8 @@ app.post('/', async function (request, response) {
 })
 
 /*
-// Zie https://expressjs.com/en/5x/api.html#app.get.method over app.get()
-app.get(…, async function (request, response) {
+  // Zie https://expressjs.com/en/5x/api.html#app.get.method over app.get()
+  app.get(…, async function (request, response) {
   
   // Zie https://expressjs.com/en/5x/api.html#res.render over response.render()
   response.render(…)
@@ -106,8 +106,8 @@ app.get(…, async function (request, response) {
 */
 
 /*
-// Zie https://expressjs.com/en/5x/api.html#app.post.method over app.post()
-app.post(…, async function (request, response) {
+  // Zie https://expressjs.com/en/5x/api.html#app.post.method over app.post()
+  app.post(…, async function (request, response) {
 
   // In request.body zitten alle formuliervelden die een `name` attribuut hebben in je HTML
   console.log(request.body)
@@ -130,7 +130,7 @@ app.post(…, async function (request, response) {
   // Zie https://expressjs.com/en/5x/api.html#res.redirect over response.redirect()
   response.redirect(303, …)
 })
-  */
+*/
 
 
 
@@ -194,7 +194,7 @@ app.get('/fresk/:role', async function (request, response) {
       console.log(bleh);
       // console.log(JSON_Obj[key]);
   }
-  Render de bijhorende view en geef hier data mee
+  //Render de bijhorende view en geef data mee
   response.render('fresk.liquid', {
     dynamicRole: dynamicRoleJSON
   })
