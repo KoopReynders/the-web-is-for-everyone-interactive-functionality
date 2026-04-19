@@ -1,0 +1,39 @@
+    <form method="post" action="/adconnect">
+
+      <label>
+        <span>Naam:</span>
+        <input type="text" name="from" placeholder="Naam">
+      </label>
+
+      <label>
+        <span>Bericht:</span>
+        <textarea name="text" placeholder="typ typ typ"></textarea>
+      </label>
+
+      <label>
+        <span>Id:</span>
+        <input name="id" placeholder="nr"></input>
+      </label>
+
+      <button type="submit">Verstuur</button>
+
+    </form>
+
+
+    <style>
+      form *{
+        font-size: 1.2em;
+      }
+      input, textarea{
+        border: 2px solid black;
+        color: black;
+        width: 30em;
+      }
+      input::placeholder, textarea::placeholder{
+        color: red;
+      }
+      label, button{
+        display:block;
+        margin: 1em;
+      }
+    </style>

@@ -28,33 +28,6 @@ app.engine('liquid', engine.express())
 app.set('views', './views')
 
 
-  //FILE SYSTEM
-  /*
-  import fs from 'fs'
-
-  const img = './public/img/businessman-loop.gif'
-  //FILTE SYSTEM UITLEZEN
-  const stats = fs.statSync(img)
-  console.log("FS",stats)
-  // const fileSizeInBytes = stats.size;
-  // console.log('Size in bytes:', fileSizeInBytes);
-  // const fileSizeInMegaBytes = fileSizeInBytes / (1024 * 1024);
-  // console.log('Size in MegaBytes:', fileSizeInMegaBytes);
-`
-  import sizeOf from 'image-size'
-
-  const { height, width } = sizeOf(img)
-  console.log(height, width)
-*/
-  
-app.get('/performance', async function (request, response) {
-  //https://nodejs.org/api/fs.html#fs_fs_stat_path_callback
-  //https://bobbyhadz.com/blog/get-size-of-file-in-node-js
-
-  response.render('performance.liquid')
-})
-
-
 
 app.get('/', async function (request, response) {
   console.log("APP.GET")
@@ -134,42 +107,41 @@ app.post('/', async function (request, response) {
 
 
 
-app.get('/messageboard', async function (request, response) {
-  console.log("MESSAGEBOARD GET")
-  // Fetch de data die je nodig hebt, de messages met filter Team Rocket
-  const messagesResponse = await fetch('https://fdnd.directus.app/items/messages/?filter={"for":"Team Rocket"}&sort=-created')
-  const messagesResponseJSON = await messagesResponse.json()
-
-  // Render de bijhorende view en geef hier data mee
-  response.render('messageboard.liquid', {
-    messages: messagesResponseJSON.data
+// ADconnect POST test
+app.get('/adconnect', async function (request, response) {
+  response.render('post.liquid', {
+    id:"123456789", 
   })
 })
-app.post('/message', async function (request, response) {
-  console.log("MESSAGEBOARD POST MESSAGE", request.body)
-  const postResponse = await fetch('https://fdnd.directus.app/items/messages/', {
+app.post('/adconnect', async function (request, response) {
+
+  // Stuur een POST request naar de messages tabel
+  // Een POST request bevat ook extra parameters, naast een URL
+  await fetch('https://fdnd-agency.directus.app/items/adconnect_news_comments', {
+
+    // Overschrijf de standaard GET method, want ook hier gaan we iets veranderen op de server
     method: 'POST',
+
+    // Geef de body mee als JSON string
     body: JSON.stringify({
-      for: `Team Rocket`,
-      from: request.body.from,
-      text: request.body.text
+      // En dit zijn onze formuliervelden
+      name: request.body.from,
+      comment: request.body.text,
+      news: request.body.id
     }),
+
+    // En vergeet deze HTTP headers niet: hiermee vertellen we de server dat we JSON doorsturen
+    // (In realistischere projecten zou je hier ook authentication headers of een sleutel meegeven)
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   });
 
-  if(request.body.enhanced){
-    console.log("if clientside")
-    const postResponseJSON = await postResponse.json();
-    //Als we een clientside post hebben, dan renderen we alleen de partial met de data die net gepost is
-    response.render('partials/message.liquid', {message: postResponseJSON.data})
-
-  }else{
-    console.log("if serverside")
-    response.redirect(303, '/messageboard')
-  }
+  // Stuur de browser daarna weer naar de homepage
+  response.redirect(303, '/post')
 })
+
+
 
 
 // Fresk test
@@ -206,26 +178,6 @@ app.get('/fresk/redirect/:role', function (request, response) {
   const role = request.params.role 
   console.log("Fresk Redirect",role)
 })
-
-
-
-
-
-/*
-app.get('/message', async function (request, response) {
-  console.log("MESSAGE GET")
-  // Render message.liquid uit de Views map mee
-  const msgObj = {
-    created:"2025-04-03T10:59:58.942Z",
-    from:"Kopo Dopo",
-    text: "Responsve obj created. Het werkt. Nu de post response oppakken, komt er dan terug wat er (succesvol) is opgeslagen?"
-  }
-  // console.log("MSG",msgObj)
-  // let jsonObject = JSON.parse(jsonString);
-
-  response.render('partials/message.liquid', {message: msgObj})
-})
-*/
 
 
 // Stel het poortnummer in waar Express op moet gaan luisteren
